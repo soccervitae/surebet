@@ -58,7 +58,7 @@ export default function BookmakerForm({
 
   async function onSubmit(data: FormData) {
     if (!bookmaker) {
-      const { error } = await supabase.from("bookmakers").insert({
+      const { error } = await supabase.from("sb_bookmakers").insert({
         ...data,
         user_profile_id: profileId,
       })
@@ -66,7 +66,7 @@ export default function BookmakerForm({
       toast.success("Casa de aposta criada!")
     } else {
       const { error } = await supabase
-        .from("bookmakers")
+        .from("sb_bookmakers")
         .update(data)
         .eq("id", bookmaker.id)
       if (error) { toast.error("Erro ao atualizar"); return }

@@ -63,8 +63,8 @@ export default function ProfileBalance({ profileId }: { profileId: string }) {
 
   async function load() {
     const [{ data: e }, { data: b }] = await Promise.all([
-      supabase.from("balance_entries").select("*").eq("user_profile_id", profileId).order("entry_date", { ascending: false }).order("created_at", { ascending: false }),
-      supabase.from("bookmakers").select("*").eq("user_profile_id", profileId),
+      supabase.from("sb_balance_entries").select("*").eq("user_profile_id", profileId).order("entry_date", { ascending: false }).order("created_at", { ascending: false }),
+      supabase.from("sb_bookmakers").select("*").eq("user_profile_id", profileId),
     ])
     setEntries(e || [])
     setBookmakers(b || [])
@@ -73,7 +73,7 @@ export default function ProfileBalance({ profileId }: { profileId: string }) {
   useEffect(() => { load() }, [profileId])
 
   async function onSubmit(data: FormData) {
-    const { error } = await supabase.from("balance_entries").insert({
+    const { error } = await supabase.from("sb_balance_entries").insert({
       user_profile_id: profileId,
       entry_type: data.entry_type,
       amount: parseFloat(data.amount),
@@ -90,7 +90,7 @@ export default function ProfileBalance({ profileId }: { profileId: string }) {
 
   async function deleteEntry(id: string) {
     if (!confirm("Excluir este lançamento?")) return
-    await supabase.from("balance_entries").delete().eq("id", id)
+    await supabase.from("sb_balance_entries").delete().eq("id", id)
     toast.success("Lançamento excluído")
     load()
   }

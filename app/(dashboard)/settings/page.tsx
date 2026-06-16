@@ -4,20 +4,14 @@ import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Settings } from "lucide-react"
-import type { Profile } from "@/types"
+import type { User } from "@supabase/supabase-js"
 
 export default function SettingsPage() {
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
-    async function load() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-      setProfile(data)
-    }
-    load()
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
   }, [])
 
   return (
@@ -35,19 +29,23 @@ export default function SettingsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {profile ? (
+          {user ? (
             <>
               <div>
                 <p className="text-xs text-[var(--color-muted)]">Nome</p>
-                <p className="text-[var(--color-text)] font-medium">{profile.full_name}</p>
+                <p className="text-[var(--color-text)] font-medium">
+                  {user.user_metadata?.full_name || "—"}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-[var(--color-muted)]">E-mail</p>
-                <p className="text-[var(--color-text)]">{profile.email}</p>
+                <p className="text-[var(--color-text)]">{user.email}</p>
               </div>
               <div>
                 <p className="text-xs text-[var(--color-muted)]">Membro desde</p>
-                <p className="text-[var(--color-text)]">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</p>
+                <p className="text-[var(--color-text)]">
+                  {new Date(user.created_at).toLocaleDateString("pt-BR")}
+                </p>
               </div>
             </>
           ) : (

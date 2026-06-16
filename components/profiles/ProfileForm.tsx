@@ -51,7 +51,7 @@ export default function ProfileForm({
     if (!profile) {
       // Check CPF uniqueness
       const { data: existing } = await supabase
-        .from("user_profiles")
+        .from("sb_user_profiles")
         .select("id")
         .eq("user_id", user.id)
         .eq("cpf", data.cpf)
@@ -62,7 +62,7 @@ export default function ProfileForm({
         return
       }
 
-      const { error } = await supabase.from("user_profiles").insert({
+      const { error } = await supabase.from("sb_user_profiles").insert({
         ...data,
         user_id: user.id,
       })
@@ -70,7 +70,7 @@ export default function ProfileForm({
       toast.success("Perfil criado!")
     } else {
       const { error } = await supabase
-        .from("user_profiles")
+        .from("sb_user_profiles")
         .update(data)
         .eq("id", profile.id)
       if (error) { toast.error("Erro ao atualizar perfil"); return }

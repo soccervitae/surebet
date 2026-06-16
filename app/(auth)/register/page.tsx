@@ -48,14 +48,6 @@ export default function RegisterPage() {
       return
     }
 
-    if (authData.user) {
-      await supabase.from("profiles").insert({
-        id: authData.user.id,
-        full_name: data.full_name,
-        email: data.email,
-      })
-    }
-
     toast.success("Conta criada com sucesso!")
     router.push("/")
     router.refresh()

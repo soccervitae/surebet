@@ -28,7 +28,7 @@ export default function DashboardPage() {
       if (!user) return
 
       const { data: profiles } = await supabase
-        .from("user_profiles")
+        .from("sb_user_profiles")
         .select("*")
         .eq("user_id", user.id)
         .eq("is_active", true)
@@ -39,13 +39,13 @@ export default function DashboardPage() {
       const results: ProfileData[] = await Promise.all(
         profiles.map(async (profile) => {
           const { data: balance } = await supabase
-            .from("profile_balances")
+            .from("sb_profile_balances")
             .select("*")
             .eq("user_profile_id", profile.id)
             .single()
 
           const { count } = await supabase
-            .from("bookmakers")
+            .from("sb_bookmakers")
             .select("*", { count: "exact", head: true })
             .eq("user_profile_id", profile.id)
             .eq("is_active", true)

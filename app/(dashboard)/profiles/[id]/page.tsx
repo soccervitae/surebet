@@ -21,8 +21,8 @@ export default function ProfileDetailPage() {
   useEffect(() => {
     async function load() {
       const [{ data: p }, { data: b }] = await Promise.all([
-        supabase.from("user_profiles").select("*").eq("id", id).single(),
-        supabase.from("profile_balances").select("*").eq("user_profile_id", id).single(),
+        supabase.from("sb_user_profiles").select("*").eq("id", id).single(),
+        supabase.from("sb_profile_balances").select("*").eq("user_profile_id", id).single(),
       ])
       setProfile(p)
       setBalance(b)

@@ -24,7 +24,7 @@ export default function ProfilesPage() {
     if (!user) return
 
     const { data } = await supabase
-      .from("user_profiles")
+      .from("sb_user_profiles")
       .select("*")
       .eq("user_id", user.id)
       .order("created_at")
@@ -37,7 +37,7 @@ export default function ProfilesPage() {
 
   async function toggleActive(profile: UserProfile) {
     const { error } = await supabase
-      .from("user_profiles")
+      .from("sb_user_profiles")
       .update({ is_active: !profile.is_active })
       .eq("id", profile.id)
 

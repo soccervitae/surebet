@@ -30,8 +30,8 @@ export default function BookmakerDetailPage() {
 
   async function load() {
     const [{ data: bm }, { data: accounts }] = await Promise.all([
-      supabase.from("bookmakers").select("*").eq("id", bookId).single(),
-      supabase.from("bank_accounts").select("*").eq("bookmaker_id", bookId),
+      supabase.from("sb_bookmakers").select("*").eq("id", bookId).single(),
+      supabase.from("sb_bank_accounts").select("*").eq("bookmaker_id", bookId),
     ])
     setBookmaker(bm)
     setBankAccounts(accounts || [])
@@ -53,14 +53,14 @@ export default function BookmakerDetailPage() {
     const finalWithdrawal = sameAsDeposit ? depositBank : withdrawalBank
 
     // Delete existing and re-insert
-    await supabase.from("bank_accounts").delete().eq("bookmaker_id", bookId)
+    await supabase.from("sb_bank_accounts").delete().eq("bookmaker_id", bookId)
 
     const inserts = []
     if (depositBank) inserts.push({ bookmaker_id: bookId, account_type: "deposit" as const, bank_name: depositBank })
     if (finalWithdrawal) inserts.push({ bookmaker_id: bookId, account_type: "withdrawal" as const, bank_name: finalWithdrawal })
 
     if (inserts.length > 0) {
-      const { error } = await supabase.from("bank_accounts").insert(inserts)
+      const { error } = await supabase.from("sb_bank_accounts").insert(inserts)
       if (error) { toast.error("Erro ao salvar contas"); setSavingBanks(false); return }
     }
 

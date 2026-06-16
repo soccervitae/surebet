@@ -20,7 +20,7 @@ export default function BookmakerList({ profileId }: { profileId: string }) {
 
   async function load() {
     const { data } = await supabase
-      .from("bookmakers")
+      .from("sb_bookmakers")
       .select("*")
       .eq("user_profile_id", profileId)
       .order("created_at")
@@ -32,7 +32,7 @@ export default function BookmakerList({ profileId }: { profileId: string }) {
 
   async function toggleActive(bm: Bookmaker) {
     const { error } = await supabase
-      .from("bookmakers")
+      .from("sb_bookmakers")
       .update({ is_active: !bm.is_active })
       .eq("id", bm.id)
     if (error) { toast.error("Erro ao atualizar"); return }
