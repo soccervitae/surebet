@@ -135,7 +135,7 @@ export default function DashboardPage() {
                 <YAxis tick={{ fill: "var(--color-muted)", fontSize: 12 }} tickFormatter={(v) => formatCurrency(v)} width={90} />
                 <Tooltip
                   contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "8px", color: "var(--color-text)" }}
-                  formatter={(v: number) => [formatCurrency(v), "Saldo"]}
+                  formatter={(v) => [formatCurrency(Number(v)), "Saldo"]}
                 />
                 <Bar dataKey="balance" radius={[4, 4, 0, 0]}>
                   {chartData.map((entry, i) => (

@@ -171,7 +171,7 @@ export default function ProfileBalance({ profileId }: { profileId: string }) {
                 <YAxis tick={{ fill: "var(--color-muted)", fontSize: 11 }} tickFormatter={(v) => formatCurrency(v)} width={90} />
                 <Tooltip
                   contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "8px" }}
-                  formatter={(v: number) => [formatCurrency(v), "Saldo"]}
+                  formatter={(v) => [formatCurrency(Number(v)), "Saldo"]}
                 />
                 <Line type="monotone" dataKey="balance" stroke="var(--color-accent)" strokeWidth={2} dot={false} />
               </LineChart>
