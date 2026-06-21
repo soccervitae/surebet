@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard, Users, Trophy, Wallet, Settings, LogOut,
-  TrendingUp, ChevronLeft, ChevronRight, Menu, X
+  TrendingUp, ChevronLeft, ChevronRight, Menu, Calculator, CreditCard
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
@@ -14,7 +14,11 @@ import { toast } from "sonner"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/profiles", label: "Meus Perfis", icon: Users },
+  { href: "/profiles", label: "Perfis", icon: Users },
+  { href: "/calculadora", label: "Calculadora", icon: Calculator },
+  { href: "/apostas", label: "Apostas", icon: Trophy },
+  { href: "/financeiro", label: "Financeiro", icon: Wallet },
+  { href: "/assinatura", label: "Assinatura", icon: CreditCard },
   { href: "/settings", label: "Configurações", icon: Settings },
 ]
 
@@ -24,6 +28,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const supabase = createClient()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    async function checkOnboarding() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push("/login"); return }
+
+      const { count } = await supabase
+        .from("sb_user_profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+
+      if (count === 0) router.push("/onboarding")
+    }
+    checkOnboarding()
+  }, [pathname])
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -46,7 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside
         className={cn(
           "fixed lg:relative z-50 flex flex-col h-full bg-[var(--color-surface)] border-r border-[var(--color-border)] transition-all duration-300",
-          collapsed ? "w-16" : "w-64",
+          collapsed ? "w-16" : "w-56",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
@@ -54,7 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-3 p-4 border-b border-[var(--color-border)] h-16">
           <TrendingUp className="h-6 w-6 text-[var(--color-accent)] shrink-0" />
           {!collapsed && (
-            <span className="font-bold text-[var(--color-text)] truncate">SureBet Manager</span>
+            <span className="font-bold text-[var(--color-text)] truncate text-sm">SureBet Manager</span>
           )}
         </div>
 
@@ -92,7 +111,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {!collapsed && <span>Sair</span>}
           </button>
 
-          {/* Collapse toggle */}
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="hidden lg:flex items-center justify-center w-full rounded-lg px-3 py-2 text-[var(--color-muted)] hover:bg-[var(--color-surface-2)] transition-colors"

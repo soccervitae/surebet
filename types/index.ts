@@ -82,6 +82,32 @@ export const PROFILE_COLORS = [
   '#06b6d4',
 ]
 
+export type ApostaStatus = 'pendente' | 'finalizada' | 'cancelada'
+
+export type Aposta = {
+  id: string
+  profile_id: string
+  evento: string
+  tipo: '2-way' | '3-way'
+  investimento_total: number
+  lucro_garantido: number
+  roi_percentual: number
+  status: ApostaStatus
+  resultado_real: number | null
+  finalizada_at: string | null
+  created_at: string
+}
+
+export type ApostaLeg = {
+  id: string
+  aposta_id: string
+  bookmaker_id: string
+  resultado_apostado: string
+  odd: number
+  stake: number
+  created_at: string
+}
+
 export const POPULAR_BOOKMAKERS = [
   'Bet365',
   'Betano',
